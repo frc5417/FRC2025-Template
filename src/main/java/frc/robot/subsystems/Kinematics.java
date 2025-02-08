@@ -8,6 +8,7 @@ import frc.robot.Constants;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Kinematics {
   /** Creates a new Compute. */
@@ -103,11 +104,12 @@ public class Kinematics {
 
     for (int i = 0; i < 4; i++) {
       targetModuleStates[i] = new Module.ModuleState(vel[i], theta[i]);
-      // String name = "Swerve (" + String.valueOf(i) + ") Angle";
-      // SmartDashboard.putNumber(name, theta[i]);
-      // String name = "Swerve (" + String.valueOf(i) + ") Speed";
-      // SmartDashboard.putNumber(name, vel[i]);
+      String name = "Swerve (" + String.valueOf(i) + ") Angle";
+      SmartDashboard.putNumber(name, theta[i]);
+      name = "Swerve (" + String.valueOf(i) + ") Speed";
+      SmartDashboard.putNumber(name, vel[i]);
     }
+    
     
     return targetModuleStates;
   }

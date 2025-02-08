@@ -9,7 +9,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -20,7 +21,7 @@ public class Module {
   /** Creates a new Module. */
 
   public SparkMax angleMotor;
-  public SparkMax driveMotor;
+  public SparkFlex driveMotor;
 
   public final RelativeEncoder integratedDriveEncoder;
   private final RelativeEncoder integratedAngleEncoder;
@@ -60,7 +61,8 @@ public class Module {
     //  _CANCoder.setPosition(0);
     
      /* Drive Motor Config */
-     driveMotor = new SparkMax(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
+    //  driveMotor = new SparkMax(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
+        driveMotor = new SparkFlex(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
      configDriveMotor();
 
      integratedDriveEncoder = driveMotor.getEncoder();
@@ -190,7 +192,7 @@ public class Module {
   }
 
   private void configDriveMotor() {
-    SparkMaxConfig dConfig = new SparkMaxConfig();
+    SparkFlexConfig dConfig = new SparkFlexConfig();
 
     dConfig.idleMode(Constants.Swerve.driveNeutralMode);
     dConfig.smartCurrentLimit(50);

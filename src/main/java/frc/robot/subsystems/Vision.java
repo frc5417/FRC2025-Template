@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Vision extends SubsystemBase {
   /** Creates a new Limelight. */  
   Optional<EstimatedRobotPose> results1;
-  Optional<EstimatedRobotPose> results2;
 
   AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
   Transform3d camera1_transform = new Transform3d(new Translation3d(0.0, 0.0254, 0.6096), new Rotation3d(0,0,Math.PI/2)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
@@ -70,11 +69,6 @@ public class Vision extends SubsystemBase {
     if (results1.isPresent()) {
       pose1 = results1.get().estimatedPose.toPose2d();
       timestamp1 = results1.get().timestampSeconds;
-    }
-
-    if (results2.isPresent()) {
-      pose2 = results2.get().estimatedPose.toPose2d();
-      timestamp2 = results2.get().timestampSeconds;
     }
 
     field1.setRobotPose(pose1);
