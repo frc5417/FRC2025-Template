@@ -26,8 +26,8 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverPort = 0;
     public static final int kManipulatorPort = 1;
-    public static final boolean fieldCentric = true; //FRONT IS THE SIDE OPPOSITE TO BATTERY
-    public static final double joystickDeadband = 0.1; //HAS TO BE TUNED A BIT
+    public static final boolean fieldCentric = true; // front is the side with the battery
+    public static final double joystickDeadband = 0.1; // HAS TO BE TUNED A BIT
   }
 
   public static class ModuleConstants {
@@ -35,9 +35,9 @@ public final class Constants {
     public static final Integer[] driveMotorIDS = {11, 21, 31, 41}; 
     public static final Integer[] angleMotorIDS = {12, 22, 32, 42};
     public static final Integer[] CANCoderID = {13, 23, 33, 43};
-    public static final Double[] motorDegrees = {10.28304, 0.08784, .5274, .17568};
-    public static final Double degTolerance = 0.75;
-    public static final boolean[] invertedMotors = {true, true, true, false};
+    public static final Double[] motorDegrees = {-0.17568, 0.17568, -0.08784, 0.26352};
+    public static final Double degTolerance = 0.005; // originally 0.75
+    public static final boolean[] invertedMotors = {true, false, false, false};
 
   }
 
@@ -80,11 +80,6 @@ public final class Constants {
 
   public static class DriveBaseConstants {
     public static final double driveBaseRadius = (Double) 0.51 * Math.sqrt(2); 
-  }
-
-  public static class SampleConstants {
-    public static final int sampleNeo = 15;
-    public static final int sampleFlex = 59;
   }
 
   public static class Auton {

@@ -40,6 +40,7 @@ public class DriveBase extends SubsystemBase {
 
     double tic, toc = 0;
 
+    // might need to change this
     Translation2d m_frontLeftLocation = new Translation2d(-0.23495, 0.23495);
     Translation2d m_frontRightLocation = new Translation2d(0.23495, 0.23495);
     Translation2d m_backLeftLocation = new Translation2d(-0.23495, -0.23495);

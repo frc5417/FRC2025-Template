@@ -18,6 +18,7 @@ public class Kinematics {
   private double gyro = 0.0;
   private final Pigeon2 m_pigeon;
 
+  private final String PIGEON_YAW = "Yaw:";
 
   public Kinematics(Pigeon2 pigeon) {
     this.fieldCentric = Constants.OperatorConstants.fieldCentric;
@@ -97,6 +98,8 @@ public class Kinematics {
     } else {
       this.gyro = 0;
     }
+    // Pigeon Yaw is recorded to the driver station dashboard
+    SmartDashboard.putNumber(PIGEON_YAW, this.gyro);
 
     conv(computeUnicorn(computeStrafe(targetXVelRatio, targetYVelRatio), computeRotation(targetAngVelRatio)));
 
@@ -104,12 +107,13 @@ public class Kinematics {
 
     for (int i = 0; i < 4; i++) {
       targetModuleStates[i] = new Module.ModuleState(vel[i], theta[i]);
-      String name = "Swerve (" + String.valueOf(i) + ") Angle";
-      SmartDashboard.putNumber(name, theta[i]);
-      name = "Swerve (" + String.valueOf(i) + ") Speed";
-      SmartDashboard.putNumber(name, vel[i]);
+
+      // Telemetery data of each swerve module
+      // String name = "Swerve (" + String.valueOf(i) + ") Angle";
+      // SmartDashboard.putNumber(name, theta[i]);
+      // name = "Swerve (" + String.valueOf(i) + ") Speed";
+      // SmartDashboard.putNumber(name, vel[i]);
     }
-    
     
     return targetModuleStates;
   }
