@@ -104,17 +104,17 @@ public class Kinematics {
     conv(computeUnicorn(computeStrafe(targetXVelRatio, targetYVelRatio), computeRotation(targetAngVelRatio)));
 
     Module.ModuleState[] targetModuleStates = new Module.ModuleState[4];
-
+    
     for (int i = 0; i < 4; i++) {
       targetModuleStates[i] = new Module.ModuleState(vel[i], theta[i]);
 
       // Telemetery data of each swerve module
-      // String name = "Swerve (" + String.valueOf(i) + ") Angle";
-      // SmartDashboard.putNumber(name, theta[i]);
-      // name = "Swerve (" + String.valueOf(i) + ") Speed";
-      // SmartDashboard.putNumber(name, vel[i]);
+      String name = Constants.ModuleConstants.ModulePosition[i] + " Angle";
+      SmartDashboard.putNumber(name, theta[i]);
+      name = Constants.ModuleConstants.ModulePosition[i] + " Speed";
+      SmartDashboard.putNumber(name, vel[i]);
     }
-    
+
     return targetModuleStates;
   }
 

@@ -27,6 +27,7 @@ public class Module {
   private final RelativeEncoder integratedAngleEncoder;
 
   private final int moduleNum; // ZERO INDEXED
+  private final String modulePos;
 
   private static final double kP = 0.50; //0.4
   private static final double kI = 0.0;
@@ -41,19 +42,18 @@ public class Module {
 
   int cnt = 0;
 
-  public Module(int module, boolean inverted) {
-    
+  public Module(int module, boolean invertedDrive) {
     this.moduleNum = module;
 
      /* Angle Motor Config */
-     angleMotor = new SparkMax(Constants.ModuleConstants.angleMotorIDS[this.moduleNum], MotorType.kBrushless);
+    angleMotor = new SparkMax(Constants.ModuleConstants.angleMotorIDS[this.moduleNum], MotorType.kBrushless);
     //  angleMotor.setIdleMode(IdleMode.kBrake);
-     configAngleMotor();
+    configAngleMotor();
 
-     integratedAngleEncoder = angleMotor.getEncoder();
-     angleMotor.getClosedLoopController();
+    integratedAngleEncoder = angleMotor.getEncoder();
+    angleMotor.getClosedLoopController();
 
-     _CANCoder = new CANcoder(Constants.ModuleConstants.CANCoderID[this.moduleNum], "canivore");
+    _CANCoder = new CANcoder(Constants.ModuleConstants.CANCoderID[this.moduleNum], "canivore");
     //  configurator = _CANCoder.getConfigurator();
 
     //  _CANCoder.setPositionToAbsolute(0);
@@ -62,18 +62,20 @@ public class Module {
     
      /* Drive Motor Config */
     //  driveMotor = new SparkMax(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
-        driveMotor = new SparkFlex(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
-     configDriveMotor();
+    driveMotor = new SparkFlex(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
+    configDriveMotor();
 
-     integratedDriveEncoder = driveMotor.getEncoder();
-     driveMotor.getClosedLoopController();
-     integratedDriveEncoder.setPosition(0);
+    integratedDriveEncoder = driveMotor.getEncoder();
+    driveMotor.getClosedLoopController();
+    integratedDriveEncoder.setPosition(0);
      
+    modulePos = Constants.ModuleConstants.ModulePosition[this.moduleNum];
 
     pid.enableContinuousInput(0, Math.PI * 2);
     pid.setTolerance(0.0);
 
-    this.invertDriveSpeed = inverted;
+    this.invertDriveSpeed = invertedDrive;
+
     // if(_CANCoder.getMagnetFieldStrength() != MagnetFieldStrength.Good_GreenLED) {
       // throw new RuntimeException("CANCoder on Module #" + Integer.valueOf(this.moduleNum).toString() + " is not green!");
     // }
@@ -126,6 +128,10 @@ public class Module {
 
   public double getAngularVelocity() {
     return integratedAngleEncoder.getVelocity();
+  }
+
+  public String getModulePos() {
+    return modulePos;
   }
 
   // private void invertDrive() {

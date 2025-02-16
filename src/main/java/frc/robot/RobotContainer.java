@@ -34,16 +34,15 @@ import frc.robot.subsystems.Vision;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-
   public static Pigeon2 pigeon = new Pigeon2(59, "canivore");
-
+  
   public static Kinematics kinematics = new Kinematics(pigeon);
   public static DriveBase driveBase = new DriveBase(kinematics, pigeon);
   // public static Elevator elevator = new Elevator();
   public static Bezier bezier = new Bezier();
-
+  
   public static final Vision vision = new Vision();
-
+  
   public static AutonLoader autonLoader = new AutonLoader(driveBase, vision); //NEEDED SUBSYSTEMS FOR AUTON, ELEVATOR NOT USED
   public static TeleopDrive teleopDrive = new TeleopDrive(driveBase, vision); //ALL SUBSYSTEMS
 
@@ -58,6 +57,11 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    // Zeroes the yaw rotation.
+    // pigeon.reset();
+    pigeon.setYaw(90);
+    
   }
 
   public static void defineNamedCommands() {

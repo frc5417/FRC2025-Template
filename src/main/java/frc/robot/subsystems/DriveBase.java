@@ -13,9 +13,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 public class DriveBase extends SubsystemBase {
 
@@ -46,7 +46,11 @@ public class DriveBase extends SubsystemBase {
     Translation2d m_backLeftLocation = new Translation2d(-0.23495, -0.23495);
     Translation2d m_backRightLocation = new Translation2d(0.23495, -0.23495);
 
-    SwerveDriveKinematics m_skdKine = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+    SwerveDriveKinematics m_skdKine = new SwerveDriveKinematics(m_backLeftLocation, m_frontLeftLocation, m_frontRightLocation, m_backRightLocation);
+
+    // SwerveDriveKinematics m_skdKine = new SwerveDriveKinematics(m_frontRightLocation, m_backRightLocation, m_backLeftLocation, m_frontLeftLocation);
+
+    // SwerveDriveKinematics m_skdKine = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
     SwerveDriveOdometry m_sdkOdom;    
 
@@ -185,6 +189,7 @@ public class DriveBase extends SubsystemBase {
         });
         
         field.setRobotPose(getCurrentPose());
+        SmartDashboard.putData("Field", field);
     }
 
 }
