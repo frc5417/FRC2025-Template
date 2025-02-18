@@ -4,29 +4,45 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
+
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AlgaeIntake extends SubsystemBase {
   /** Creates a new AlgaeIntake. */
-    public final SparkMax algaeMotor0;
-    public final SparkMax algaeMotor1;
+    private final SparkMax algaeMotor0;
+    private final SparkMax algaeMotor1;
+    private final SparkMaxConfig algae0Config;
+    //private final SparkMaxConfig algae1Config;
+    private DigitalInput algaeIntakeSwitch = new DigitalInput(Constants.ManipulatorConstants.algaeIntakeLimitValue);
 
   public AlgaeIntake() {
     algaeMotor0 = new SparkMax(Constants.ManipulatorConstants.algaeMotor0ID, MotorType.kBrushless);
     algaeMotor1 = new SparkMax(Constants.ManipulatorConstants.algaeMotor1ID, MotorType.kBrushless);
+    algae0Config = new SparkMaxConfig();
+
+    algae0Config.inverted(Constants.ManipulatorConstants.algaeMotor0Inversion);
   }
 
   public void setAlgaePower(double power) {
-    algaeMotor0.set(power);
-    algaeMotor1.set(-power);
+    if (algaeIntakeSwitch.get()) {
+      algaeMotor0.set(0);
+      algaeMotor1.set(0);
+    }
+    else {
+      algaeMotor0.set(power);
+      algaeMotor1.set(-power);
+    }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+  
 }

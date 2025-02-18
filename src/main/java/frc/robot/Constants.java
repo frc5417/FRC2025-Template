@@ -42,19 +42,19 @@ public final class Constants {
   }
 
   public static class ManipulatorConstants {
-    public static final int elevatorMaster = 61;
-    public static final int elevatorSlave = 62;
-    public static final int intake = 51;
-    public static final int shooterMaster = 52;
-    public static final int shooterSlave = 53;
-    public static final int shooterIntake = 54;
-    public static final int wrist = 55;
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double wristTolerance = 0.02;
-    public static final double shooterNominalAngle = 67;
-    public static final double intakeCurrentLimit = 7;
+
+    // Algae Motors
+    public static final int algaeMotor0ID = 50;
+    public static final int algaeMotor1ID = 51;
+    public static final boolean algaeMotor0Inversion = false;
+    //public static final boolean algaeMotor1Inversion = false;
+    public static final int algaeIntakeLimitValue = 0;
+
+    // Coral Motors
+    public static final int coralMotor2ID = 52;
+    public static final int coralMotor3ID = 53;
+    public static final boolean coralMotor2Inversion = false;
+    //public static final boolean coralMotor3Inversion = false;
   }
 
   public static class Wrist {

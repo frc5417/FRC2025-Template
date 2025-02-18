@@ -19,6 +19,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutonLoader;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.RunAlgae;
+import frc.robot.commands.RunCoral;
+import frc.robot.subsystems.AlgaeIntake;
+import frc.robot.subsystems.CoralIntake;
 import frc.robot.subsystems.Bezier;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Kinematics;
@@ -34,13 +38,13 @@ import frc.robot.subsystems.Vision;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-
   public static Pigeon2 pigeon = new Pigeon2(59, "canivore");
-
+  public static Bezier bezier = new Bezier();
+  public static AlgaeIntake algaeIntake = new AlgaeIntake();
+  public static CoralIntake coralIntake = new CoralIntake();
   public static Kinematics kinematics = new Kinematics(pigeon);
   public static DriveBase driveBase = new DriveBase(kinematics, pigeon);
   // public static Elevator elevator = new Elevator();
-  public static Bezier bezier = new Bezier();
 
   public static final Vision vision = new Vision();
 
@@ -89,6 +93,10 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+
+    m_manipulatorController.b().whileTrue(new RunAlgae(algaeIntake, 0.5));
+    m_manipulatorController.a().whileTrue(new RunCoral(coralIntake, 0.5));
+
   }
 
   public static void setDriverRumble(double rumbleVal) {

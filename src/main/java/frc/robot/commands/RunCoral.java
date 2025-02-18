@@ -3,25 +3,25 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-import frc.robot.subsystems.AlgaeIntake;
+import frc.robot.subsystems.CoralIntake;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunAlgae extends Command {
+public class RunCoral extends Command {
   private final double power;
-  private static AlgaeIntake algaeIntake;
+  private static CoralIntake coralIntake;
   private boolean terminate = false;
 
-  /** Creates a new RunAlgae. */
-  public RunAlgae(AlgaeIntake intake, double power) {
-    algaeIntake = intake;
+  /** Creates a new RunCoral. */
+  public RunCoral(CoralIntake intake, double power) {
+    coralIntake = intake;
     this.power = power;
     // Use addRequirements() here to declare subsystem dependencies.
   }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    algaeIntake.setAlgaePower(power);
+    coralIntake.setCoralPower(power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +33,7 @@ public class RunAlgae extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algaeIntake.setAlgaePower(0);
+    coralIntake.setCoralPower(0);
   }
 
   // Returns true when the command should end.
