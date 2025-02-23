@@ -7,14 +7,13 @@ import frc.robot.subsystems.CoralIntake;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunCoral extends Command {
+public class RunCoralWrist extends Command {
   private double power;
-  private static CoralIntake coralWheel;
   private static CoralIntake coralWrist;
   private boolean terminate = false;
 
   /** Creates a new RunCoral. */
-  public RunCoral(CoralIntake coralWheel, double power) {
+  public RunCoralWrist(CoralIntake coralWrist, double power) {
     //coralWheel = intake;
     this.power = power;
     //public final static CommandXboxController m_manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorPort);
@@ -24,7 +23,7 @@ public class RunCoral extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    coralWheel.setCoralWristPower(power);
+    coralWrist.setCoralWristPower(power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,7 +35,6 @@ public class RunCoral extends Command {
   @Override
   public void end(boolean interrupted) {
     coralWrist.setCoralWristPower(0);
-    coralWheel.setCoralWheelPower(0);
   }
 
   // Returns true when the command should end.

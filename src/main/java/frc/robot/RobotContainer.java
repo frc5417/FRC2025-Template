@@ -20,7 +20,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutonLoader;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.RunAlgae;
-import frc.robot.commands.RunCoral;
+import frc.robot.commands.RunCoralWrist;
+import frc.robot.commands.RunCoralWheel;
 import frc.robot.commands.RunElevator;
 import frc.robot.subsystems.*;
 
@@ -37,7 +38,8 @@ public class RobotContainer {
   public static Pigeon2 pigeon = new Pigeon2(59, "canivore");
   public static Bezier bezier = new Bezier();
   public static AlgaeIntake algaeIntake = new AlgaeIntake();
-  public static CoralIntake coralIntake = new CoralIntake();
+  public static CoralIntake coralWristIntake = new CoralIntake();
+  public static CoralIntake coralWheelIntake = new CoralIntake();
   public static Kinematics kinematics = new Kinematics(pigeon);
   public static DriveBase driveBase = new DriveBase(kinematics, pigeon);
   public static Elevator elevator = new Elevator();
@@ -96,10 +98,10 @@ public class RobotContainer {
 
     m_manipulatorController.rightTrigger().whileTrue(new RunAlgae(algaeIntake, 0.5)); // Intake Algae
     m_manipulatorController.leftTrigger().whileTrue(new RunAlgae(algaeIntake, -0.5)); // Outtake Algae
-    m_manipulatorController.rightBumper().whileTrue(new RunCoral(coralIntake, 0.5)); // Intake Coral
-    m_manipulatorController.leftBumper().whileTrue(new RunCoral(coralIntake, -0.5)); // Outtake Coral
-    //m_manipulatorController.povDown().whileTrue(new RunCoral(0.5)); // Move Algae wrist up
-    //m_manipulatorController.povUp().whileTrue(new RunCoral(coralIntake, -0.5)); // Move Algae wrist down
+    m_manipulatorController.rightBumper().whileTrue(new RunCoralWrist(coralWristIntake, 0.5)); // Intake Coral
+    m_manipulatorController.leftBumper().whileTrue(new RunCoralWrist(coralWristIntake, -0.5)); // Outtake Coral
+    m_manipulatorController.povDown().whileTrue(new RunCoralWheel(coralWheelIntake, 0.5)); // Move Algae wrist up
+    m_manipulatorController.povUp().whileTrue(new RunCoralWrist(coralWristIntake, -0.5)); // Move Algae wrist down
 
   }
 
