@@ -32,13 +32,14 @@ public final class Constants {
 
   public static class ModuleConstants {
     // 0 indexing
-    public static final Integer[] driveMotorIDS = {11, 21, 41, 31}; 
-    public static final Integer[] angleMotorIDS = {12, 22, 42, 32};
-    public static final Integer[] CANCoderID = {13, 23, 43, 33};
-    public static final String[] ModulePosition = {"Back Left", "Front Left", "Back Right", "Front Right"};
-    public static final Double[] motorDegrees = {-0.17568, 0.17568, 0.26352, -0.08784};
-    public static final Double degTolerance = 0.75; // originally 0.75
-    public static final boolean[] invertedMotors = {true, false, false, false};
+    public static final Integer[] driveMotorIDS = {11, 21, 31, 41}; 
+    public static final Integer[] angleMotorIDS = {12, 22, 32, 42};
+    public static final Integer[] CANCoderID = {13, 23, 33, 43};
+    public static final String[] ModulePosition = {"Front Left", "Front Right", "Back Left", "Back Right"};
+    // public static final Double[] motorDegrees = {93.69144, 88.68168, 93.16404, 85.69332};
+    public static final Double[] motorDegrees = {0.0, 0.0, 0.0, 0.0};
+    public static final Double degTolerance = 0.75;
+    public static final boolean[] invertedMotors = {false, false, false, false};
 
   }
 
@@ -67,9 +68,9 @@ public final class Constants {
   }
   
   public static class Swerve {
-    public static final Double angularPercentage = -0.7;
-    public static final Double XPercentage = -1.0;
-    public static final Double YPercentage = -1.0;
+    public static final Double angularPercentage = 0.7;
+    public static final Double XPercentage = 1.0;
+    public static final Double YPercentage = 1.0;
 
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;
     public static final IdleMode driveNeutralMode = IdleMode.kCoast;
@@ -77,10 +78,16 @@ public final class Constants {
     public static final double maxAngularVelocity = 10; //rad/sec
     public static final double maxModuleSpeed = 0.3;
     public static final boolean blueFlipState = false;
+
+    public static final double angleKP = 0.055;
+    public static final double angleKI = 0.0;
+    public static final double angleKD = 0.0013;
+    public static final double angleKF = 0;
+    public static final double voltageComp = 12;
   }
 
   public static class DriveBaseConstants {
-    public static final double driveBaseRadius = (Double) 0.51 * Math.sqrt(2); 
+    public static final double driveBaseRadius = (Double) 0.33 * Math.sqrt(2); 
   }
 
   public static class Auton {

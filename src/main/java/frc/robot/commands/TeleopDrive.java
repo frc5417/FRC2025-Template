@@ -28,9 +28,7 @@ public class TeleopDrive extends Command {
   private final DriveBase m_driveBase;
   // private final Elevator m_elevator;
   private final Vision m_vision;
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-
-  
+  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(); // update to 2025
 
   double prev_omega = 0;
   double prev_xVel = 0;
@@ -57,10 +55,9 @@ public class TeleopDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    double xVel = (RobotContainer.getDriverLeftJoyX() * 0.80) + (prev_xVel * 0.20); // originally .9 and .1
-    double yVel = (RobotContainer.getDriverLeftJoyY() * 0.80) + (prev_yVel * 0.20); // originally .9 and 1.
-    double omega = (RobotContainer.getDriverRightJoyX() * 0.90) + (prev_omega * 0.10);
+    double xVel = (-RobotContainer.getDriverRightJoyY() * 0.90) + (prev_xVel * 0.10); // originally .9 and .1
+    double yVel = (-RobotContainer.getDriverRightJoyX() * 0.90) + (prev_yVel * 0.10); // originally .9 and 1.
+    double omega = (-RobotContainer.getDriverLeftJoyX() * 0.90) + (prev_omega * 0.10);
 
     prev_xVel = xVel;
     prev_yVel = yVel;

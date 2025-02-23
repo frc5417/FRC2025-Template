@@ -33,7 +33,6 @@ public class DriveBase extends SubsystemBase {
 
     Field2d field = new Field2d();
 
-
     double mod1Prev = 0;
     double mod1Curr = 0;
     int counter = 0;
@@ -46,11 +45,7 @@ public class DriveBase extends SubsystemBase {
     Translation2d m_backLeftLocation = new Translation2d(-0.23495, -0.23495);
     Translation2d m_backRightLocation = new Translation2d(0.23495, -0.23495);
 
-    SwerveDriveKinematics m_skdKine = new SwerveDriveKinematics(m_backLeftLocation, m_frontLeftLocation, m_frontRightLocation, m_backRightLocation);
-
-    // SwerveDriveKinematics m_skdKine = new SwerveDriveKinematics(m_frontRightLocation, m_backRightLocation, m_backLeftLocation, m_frontLeftLocation);
-
-    // SwerveDriveKinematics m_skdKine = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+    SwerveDriveKinematics m_skdKine = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
     SwerveDriveOdometry m_sdkOdom;    
 

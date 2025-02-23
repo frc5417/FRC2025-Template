@@ -90,7 +90,11 @@ public class Module {
     // }
   }
 
-  //angle to normalize between 0 and 2PI RAD
+  /**
+   * Normalizes the angle to between 0 and 2pi radians.
+   * @param angle
+   * @return
+   */
   public double normalizeAngle(double angle) {
     double fixedAngle = angle;
     while (fixedAngle > (2*Math.PI)) { 
@@ -100,6 +104,17 @@ public class Module {
       fixedAngle += (2*Math.PI); 
     }
     return fixedAngle;
+  }
+
+  public double normalizeAngleWPI(double angle) {
+    double normalizedAngle = angle;
+    while (normalizedAngle > Math.PI) {
+      normalizedAngle -= 2 * Math.PI;
+    }
+    while (normalizedAngle <= -Math.PI) {
+      normalizedAngle += 2 * Math.PI;
+    }
+    return normalizedAngle;
   }
 
   public double setDriveSpeed(double speed) {
@@ -114,6 +129,11 @@ public class Module {
     return x;
   }
 
+  /**
+   * Gets the current absolute position of the CANCoder, subtracts it from the 
+   * starting motor degrees, and then converts into radians. 
+   * @return
+   */
   public double getAngleInRadians() { 
     return (_CANCoder.getAbsolutePosition().getValueAsDouble() * 360.0 - Constants.ModuleConstants.motorDegrees[this.moduleNum]) * (Math.PI/180.0);
   }
@@ -185,12 +205,12 @@ public class Module {
     aConfig.idleMode(Constants.Swerve.angleNeutralMode);
     aConfig.smartCurrentLimit(25);
 
-    // aConfig.closedLoop.positionWrappingEnabled(true);
-    // aConfig.closedLoop.positionWrappingInputRange(0, 360);
+    aConfig.closedLoop.positionWrappingEnabled(true);
+    aConfig.closedLoop.positionWrappingInputRange(0, 360);
 
-    // aConfig.closedLoop.pid(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD);
-    // aConfig.closedLoop.velocityFF(Constants.Swerve.angleKF);
-    // aConfig.voltageCompensation(Constants.Swerve.voltageComp); 
+    aConfig.closedLoop.pid(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD);
+    aConfig.closedLoop.velocityFF(Constants.Swerve.angleKF);
+    aConfig.voltageCompensation(Constants.Swerve.voltageComp); 
 
     // aConfig.encoder.positionConversionFactor(Constants.Swerve.angleConversionFactor);
 
