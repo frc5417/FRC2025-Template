@@ -42,27 +42,23 @@ public final class Constants {
   }
 
   public static class ManipulatorConstants {
-
     // Algae Motors
-    public static final int algaeMotor0ID = 50;
-    public static final int algaeMotor1ID = 51;
-    public static final boolean algaeMotor0Inversion = false;
-    //public static final boolean algaeMotor1Inversion = false;
-    public static final int algaeIntakeLimitValue = 0;
+    public static final int algaeParentId = 50;
+    public static final int algaeChildId = 51;
+    public static final boolean algaeChildInversion = true;
+    public static final int algaeLimitValue = 0;
 
     // Coral Motors
-    public static final int coralMotor2ID = 52;
-    public static final int coralMotor3ID = 53;
-    public static final boolean coralMotor2Inversion = false;
-    //public static final boolean coralMotor3Inversion = false;
+    public static final int coralWrist = 52;
+    public static final int coralWheel = 53;
   }
 
-  public static class Wrist {
-    public static final double flatWristPos = 0.18069375;
-    public static final double shoot_from_subwoofer = 0.04958;
-    public static final double handoff = 0.0421;
-    public static final double amp = 0.02;
-    public static final double passing = 0.049;
+  public static class Elevator {
+    public static final double elevatorMin = 0;
+    public static final double elevatorMax = 0;
+    public static final int elevatorParentId = 54;
+    public static final int elevatorChildId = 55;
+    public static final boolean elevatorChildInversion = true;
   }
   
   public static class Swerve {

@@ -14,23 +14,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CoralIntake extends SubsystemBase {
   /** Creates a new AlgaeIntake. */
-    private final SparkMax coralMotor2;
-    private final SparkMax coralMotor3;
-    private final SparkMaxConfig coral2Config;
+    private final SparkMax coralWrist;
+    private final SparkMax coralWheel;
 
     //private DigitalInput coralIntakeSwitch = new DigitalInput(Constants.ManipulatorConstants.coralIntakeLimitValue);
 
   public CoralIntake() {
-    coralMotor2 = new SparkMax(Constants.ManipulatorConstants.coralMotor2ID, MotorType.kBrushless);
-    coralMotor3 = new SparkMax(Constants.ManipulatorConstants.coralMotor3ID, MotorType.kBrushless);
-    coral2Config = new SparkMaxConfig();
-
-    coral2Config.inverted(Constants.ManipulatorConstants.coralMotor2Inversion);
+    coralWrist = new SparkMax(Constants.ManipulatorConstants.coralWrist, MotorType.kBrushless);
+    coralWheel = new SparkMax(Constants.ManipulatorConstants.coralWheel, MotorType.kBrushless);
   }
 
-  public void setCoralPower(double power) {
-    coralMotor2.set(power);
-    coralMotor3.set(-power);
+  public void setCoralWristPower(double power) {
+    coralWrist.set(power);
+  }
+
+  public void setCoralWheelPower(double power) {
+    coralWheel.set(power);
   }
 
   @Override
