@@ -205,12 +205,12 @@ public class Module {
     aConfig.idleMode(Constants.Swerve.angleNeutralMode);
     aConfig.smartCurrentLimit(25);
 
-    aConfig.closedLoop.positionWrappingEnabled(true);
-    aConfig.closedLoop.positionWrappingInputRange(0, 360);
+    // aConfig.closedLoop.positionWrappingEnabled(true);
+    // aConfig.closedLoop.positionWrappingInputRange(0, 360);
 
-    aConfig.closedLoop.pid(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD);
-    aConfig.closedLoop.velocityFF(Constants.Swerve.angleKF);
-    aConfig.voltageCompensation(Constants.Swerve.voltageComp); 
+    // aConfig.closedLoop.pid(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD);
+    // aConfig.closedLoop.velocityFF(Constants.Swerve.angleKF);
+    // aConfig.voltageCompensation(Constants.Swerve.voltageComp); 
 
     // aConfig.encoder.positionConversionFactor(Constants.Swerve.angleConversionFactor);
 

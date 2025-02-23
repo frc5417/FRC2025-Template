@@ -61,6 +61,10 @@ public final class Constants {
     public static final int elevatorParentId = 54;
     public static final int elevatorChildId = 55;
     public static final boolean elevatorChildInversion = true;
+
+    public static final double feedKS = 0.55;
+    public static final double feedKV = 0.13;
+    public static final double feedKA = 0;
   }
   
   public static class Swerve {

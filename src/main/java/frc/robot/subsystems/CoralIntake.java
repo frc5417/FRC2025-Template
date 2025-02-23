@@ -8,6 +8,7 @@ import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +23,8 @@ public class CoralIntake extends SubsystemBase {
   public CoralIntake() {
     coralWrist = new SparkMax(Constants.ManipulatorConstants.coralWrist, MotorType.kBrushless);
     coralWheel = new SparkMax(Constants.ManipulatorConstants.coralWheel, MotorType.kBrushless);
+
+    configMotors();
   }
 
   public void setCoralWristPower(double power) {
@@ -35,5 +38,16 @@ public class CoralIntake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  private void configMotors() {
+    SparkMaxConfig wristConfig = new SparkMaxConfig();
+    SparkMaxConfig wheelConfig = new SparkMaxConfig();
+
+    wristConfig.idleMode(IdleMode.kBrake);
+    wheelConfig.idleMode(IdleMode.kBrake);
+
+    wristConfig.smartCurrentLimit(50);
+    wheelConfig.smartCurrentLimit(50);
   }
 }

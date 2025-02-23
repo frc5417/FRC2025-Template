@@ -20,7 +20,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutonLoader;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.RunAlgae;
-import frc.robot.commands.RunCoral;
+import frc.robot.commands.RunCoralWrist;
 import frc.robot.commands.RunElevator;
 import frc.robot.subsystems.*;
 
@@ -46,6 +46,7 @@ public class RobotContainer {
   
   public static AutonLoader autonLoader = new AutonLoader(driveBase, vision); //NEEDED SUBSYSTEMS FOR AUTON, ELEVATOR NOT USED
   public static TeleopDrive teleopDrive = new TeleopDrive(driveBase, vision); //ALL SUBSYSTEMS
+  public static RunElevator runElevator = new RunElevator(elevator);
 
   public final static CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverPort);
   public final static CommandXboxController m_manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorPort);
@@ -96,8 +97,8 @@ public class RobotContainer {
 
     m_manipulatorController.rightTrigger().whileTrue(new RunAlgae(algaeIntake, 0.5)); // Intake Algae
     m_manipulatorController.leftTrigger().whileTrue(new RunAlgae(algaeIntake, -0.5)); // Outtake Algae
-    m_manipulatorController.rightBumper().whileTrue(new RunCoral(coralIntake, 0.5)); // Intake Coral
-    m_manipulatorController.leftBumper().whileTrue(new RunCoral(coralIntake, -0.5)); // Outtake Coral
+    m_manipulatorController.rightBumper().whileTrue(new RunCoralWrist(coralIntake, 0.5)); // Intake Coral
+    m_manipulatorController.leftBumper().whileTrue(new RunCoralWrist(coralIntake, -0.5)); // Outtake Coral
     //m_manipulatorController.povDown().whileTrue(new RunCoral(0.5)); // Move Algae wrist up
     //m_manipulatorController.povUp().whileTrue(new RunCoral(coralIntake, -0.5)); // Move Algae wrist down
 

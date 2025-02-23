@@ -8,23 +8,28 @@ import frc.robot.Constants;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //44eeimport edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-    private final SparkFlex elevatorParent;
-    private final SparkFlex elevatorChild;
+    private final SparkMax elevatorParent;
+    private final SparkMax elevatorChild;
     public final RelativeEncoder elevatorParentEncoder;
     public final RelativeEncoder elevatorChildEncoder;
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Elevator.feedKS, 
+                                                    Constants.Elevator.feedKV, Constants.Elevator.feedKA);
 
     public Elevator() {
-        elevatorParent = new SparkFlex(Constants.Elevator.elevatorParentId, MotorType.kBrushless);
-        elevatorChild = new SparkFlex(Constants.Elevator.elevatorChildId, MotorType.kBrushless);
+        elevatorParent = new SparkMax(Constants.Elevator.elevatorParentId, MotorType.kBrushless);
+        elevatorChild = new SparkMax(Constants.Elevator.elevatorChildId, MotorType.kBrushless);
 
         motorConfig();
 
@@ -33,8 +38,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setElevatorPower(double power) {
+        elevatorParent.setVoltage(feedforward.calculate(.25 * power));
         elevatorParent.set(power);
-        elevatorChild.set(-power);
     }
     
     @Override
@@ -53,7 +58,13 @@ public class Elevator extends SubsystemBase {
         SparkFlexConfig childConfig = new SparkFlexConfig();
 
         parentConfig.idleMode(IdleMode.kBrake);
-        childConfig.apply(parentConfig);
-        childConfig.inverted(Constants.Elevator.elevatorChildInversion);
+        parentConfig.smartCurrentLimit(50);
+        // parentConfig.
+        
+        elevatorParent.configure(parentConfig, ResetMode.kResetSafeParameters, null);
+        // childConfig.apply(parentConfig);
+        // childConfig.inverted(Constants.Elevator.elevatorChildInversion);
+        childConfig.idleMode(IdleMode.kCoast);
+        elevatorChild.configure(childConfig, ResetMode.kResetSafeParameters, null);
     }
 }
