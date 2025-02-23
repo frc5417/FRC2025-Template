@@ -19,10 +19,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutonLoader;
 import frc.robot.commands.TeleopDrive;
-import frc.robot.subsystems.Bezier;
-import frc.robot.subsystems.DriveBase;
-import frc.robot.subsystems.Kinematics;
-import frc.robot.subsystems.Vision;
+import frc.robot.commands.RunAlgae;
+import frc.robot.commands.RunCoral;
+import frc.robot.commands.RunElevator;
+import frc.robot.subsystems.*;
 
 
 /**
@@ -35,12 +35,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   public static Pigeon2 pigeon = new Pigeon2(59, "canivore");
-  
+  public static Bezier bezier = new Bezier();
+  public static AlgaeIntake algaeIntake = new AlgaeIntake();
+  public static CoralIntake coralIntake = new CoralIntake();
   public static Kinematics kinematics = new Kinematics(pigeon);
   public static DriveBase driveBase = new DriveBase(kinematics, pigeon);
-  // public static Elevator elevator = new Elevator();
-  public static Bezier bezier = new Bezier();
-  
+  public static Elevator elevator = new Elevator();
+
   public static final Vision vision = new Vision();
   
   public static AutonLoader autonLoader = new AutonLoader(driveBase, vision); //NEEDED SUBSYSTEMS FOR AUTON, ELEVATOR NOT USED
@@ -92,6 +93,14 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+
+    m_manipulatorController.rightTrigger().whileTrue(new RunAlgae(algaeIntake, 0.5)); // Intake Algae
+    m_manipulatorController.leftTrigger().whileTrue(new RunAlgae(algaeIntake, -0.5)); // Outtake Algae
+    m_manipulatorController.rightBumper().whileTrue(new RunCoral(coralIntake, 0.5)); // Intake Coral
+    m_manipulatorController.leftBumper().whileTrue(new RunCoral(coralIntake, -0.5)); // Outtake Coral
+    //m_manipulatorController.povDown().whileTrue(new RunCoral(0.5)); // Move Algae wrist up
+    //m_manipulatorController.povUp().whileTrue(new RunCoral(coralIntake, -0.5)); // Move Algae wrist down
+
   }
 
   public static void setDriverRumble(double rumbleVal) {
