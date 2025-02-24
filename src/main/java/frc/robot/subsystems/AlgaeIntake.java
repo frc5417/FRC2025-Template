@@ -30,7 +30,8 @@ public class AlgaeIntake extends SubsystemBase {
   }
 
   public void setAlgaePower(double power) {
-    if (algaeIntakeSwitch.get()) {
+    // negative power intakes
+    if (getAlgaeSwitch() && power < 0) {
       algaeParent.set(0);
       algaeChild.set(0);
     }
@@ -47,14 +48,19 @@ public class AlgaeIntake extends SubsystemBase {
 
   private void configMotors() {
     SparkMaxConfig parentConfig = new SparkMaxConfig();
-    SparkMaxConfig childConfig = new SparkMaxConfig();
 
     parentConfig.idleMode(IdleMode.kBrake);
     parentConfig.smartCurrentLimit(25);
     algaeParent.configure(parentConfig, ResetMode.kResetSafeParameters, null);
+    algaeChild.configure(parentConfig, ResetMode.kResetSafeParameters, null);
 
-    childConfig.apply(parentConfig);
-    childConfig.inverted(true);
-    algaeChild.configure(childConfig, ResetMode.kResetSafeParameters, null);
+    // childConfig.apply(parentConfig);
+    // childConfig.inverted(true);
+    // algaeChild.configure(childConfig, ResetMode.kResetSafeParameters, null);
+  }
+
+  public boolean getAlgaeSwitch() {
+    // return algaeIntakeSwitch.get();
+    return false;
   }
 }

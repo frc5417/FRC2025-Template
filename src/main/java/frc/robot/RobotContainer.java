@@ -11,6 +11,7 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -21,6 +22,7 @@ import frc.robot.commands.AutonLoader;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.RunAlgae;
 import frc.robot.commands.RunCoralWrist;
+import frc.robot.commands.RunCoralWheel;
 import frc.robot.commands.RunElevator;
 import frc.robot.subsystems.*;
 
@@ -45,8 +47,7 @@ public class RobotContainer {
   public static final Vision vision = new Vision();
   
   public static AutonLoader autonLoader = new AutonLoader(driveBase, vision); //NEEDED SUBSYSTEMS FOR AUTON, ELEVATOR NOT USED
-  public static TeleopDrive teleopDrive = new TeleopDrive(driveBase, vision); //ALL SUBSYSTEMS
-  public static RunElevator runElevator = new RunElevator(elevator);
+  public static TeleopDrive teleopDrive = new TeleopDrive(driveBase, algaeIntake, coralIntake, elevator, vision); //ALL SUBSYSTEMS
 
   public final static CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverPort);
   public final static CommandXboxController m_manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorPort);
@@ -95,12 +96,10 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
-    m_manipulatorController.rightTrigger().whileTrue(new RunAlgae(algaeIntake, 0.5)); // Intake Algae
-    m_manipulatorController.leftTrigger().whileTrue(new RunAlgae(algaeIntake, -0.5)); // Outtake Algae
-    m_manipulatorController.rightBumper().whileTrue(new RunCoralWrist(coralIntake, 0.5)); // Intake Coral
-    m_manipulatorController.leftBumper().whileTrue(new RunCoralWrist(coralIntake, -0.5)); // Outtake Coral
-    //m_manipulatorController.povDown().whileTrue(new RunCoral(0.5)); // Move Algae wrist up
-    //m_manipulatorController.povUp().whileTrue(new RunCoral(coralIntake, -0.5)); // Move Algae wrist down
+    // m_manipulatorController.rightTrigger().whileTrue(new RunAlgae(algaeIntake, 0.5)); // Intake Algae
+    // m_manipulatorController.leftTrigger().whileTrue(new RunAlgae(algaeIntake, -0.5)); // Outtake Algael
+    // m_manipulatorController.leftBumper().whileTrue(new RunCoralWheel(coralIntake, 0.5)); // Intake Coral
+    // m_manipulatorController.rightBumper().whileTrue(new RunCoralWheel(coralIntake, -0.5)); // Outtake Coral
 
   }
 
@@ -224,21 +223,22 @@ public class RobotContainer {
     }
   }
 
-  // public static double getManipulatorRightTrigger() {
-  //   if (Math.abs(m_manipulatorController.getRightTriggerAxis()) > Constants.OperatorConstants.joystickDeadband) {
-  //     return m_manipulatorController.getRightTriggerAxis();
-  //   } else {
-  //     return 0;
-  //   }
-  // }
+  public static double getManipulatorRightTrigger() {
+    if (Math.abs(m_manipulatorController.getRightTriggerAxis()) > Constants.OperatorConstants.joystickDeadband) {
+      return m_manipulatorController.getRightTriggerAxis();
+    } else {
+      return 0;
+    }
+  }
 
-  // public static double getManipulatorLeftTrigger() {
-  //   if (Math.abs(m_manipulatorController.getLeftTriggerAxis()) > Constants.OperatorConstants.joystickDeadband) {
-  //     return m_manipulatorController.getLeftTriggerAxis();
-  //   } else {
-  //     return 0;
-  //   }
-  // }
+  public static double getManipulatorLeftTrigger() {
+    if (Math.abs(m_manipulatorController.getLeftTriggerAxis()) > Constants.OperatorConstants.joystickDeadband) {
+      SmartDashboard.putNumber("Left Trigger", m_manipulatorController.getLeftTriggerAxis());
+      return m_manipulatorController.getLeftTriggerAxis();
+    } else {
+      return 0;
+    }
+  }
 
     public static double getElevatorLeftJoystick() {
       if (Math.abs(m_manipulatorController.getLeftY()) > Constants.OperatorConstants.joystickDeadband) {

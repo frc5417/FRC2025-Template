@@ -4,11 +4,12 @@
 
 package frc.robot.commands;
 
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj2.command.Command;
 
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.*;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 
@@ -26,7 +27,9 @@ public class TeleopDrive extends Command {
   // Called when the command is initially scheduled.
 
   private final DriveBase m_driveBase;
-  // private final Elevator m_elevator;
+  private final AlgaeIntake m_algae;
+  private final CoralIntake m_coral;
+  private final Elevator m_elevator;
   private final Vision m_vision;
   AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(); // update to 2025
 
@@ -42,8 +45,11 @@ public class TeleopDrive extends Command {
 
   double manipulatorPosition = 0;
 
-  public TeleopDrive(DriveBase driveBase, Vision vision) {
+  public TeleopDrive(DriveBase driveBase, AlgaeIntake algaeIntake, CoralIntake coralIntake, Elevator elevator, Vision vision) {
     m_driveBase = driveBase;
+    m_algae = algaeIntake;
+    m_coral = coralIntake;
+    m_elevator = elevator;
     m_vision = vision;
   }
 
@@ -55,6 +61,9 @@ public class TeleopDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //
+    // Swerve Drive
+    //
     double xVel = (-RobotContainer.getDriverRightJoyY() * 0.90) + (prev_xVel * 0.10); // originally .9 and .1
     double yVel = (-RobotContainer.getDriverRightJoyX() * 0.90) + (prev_yVel * 0.10); // originally .9 and 1.
     double omega = (-RobotContainer.getDriverLeftJoyX() * 0.90) + (prev_omega * 0.10);
@@ -64,6 +73,32 @@ public class TeleopDrive extends Command {
     prev_omega = omega;
     
     m_driveBase.setDriveSpeed(RobotContainer.getSaturatedSpeeds(xVel, yVel, omega));
+
+    //
+    // Algae Intake
+    //
+    double algaePower =  RobotContainer.getManipulatorLeftTrigger() - RobotContainer.getManipulatorRightTrigger();
+    m_algae.setAlgaePower(algaePower);
+
+    //
+    // Coral Intake
+    //
+    double coralPower = 0;
+    if (RobotContainer.getManipulatorRightBumperBool()) {
+      coralPower++;
+    }
+    if (RobotContainer.getManipulatorLeftBumperBool()) {
+      coralPower--;
+    }
+    // m_coral.setCoralWheelPower(coralPower);
+    m_coral.setCoralWheelPower(.5);
+    m_coral.setCoralWristPower(RobotContainer.getManipulatorLeftJoyY());
+
+    //
+    // Elevator
+    //
+    m_elevator.setElevatorPower(RobotContainer.getManipulatorRightJoyY());
+
   }
 
   // Called once the command ends or is interrupted.

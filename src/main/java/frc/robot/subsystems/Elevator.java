@@ -40,6 +40,7 @@ public class Elevator extends SubsystemBase {
     public void setElevatorPower(double power) {
         elevatorParent.setVoltage(feedforward.calculate(.25 * power));
         elevatorParent.set(power);
+        
     }
     
     @Override
