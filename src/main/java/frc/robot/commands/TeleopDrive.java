@@ -4,15 +4,12 @@
 
 package frc.robot.commands;
 
-import frc.robot.Robot;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.*;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-
 
 /** An example command that uses an example subsystem. */
 public class TeleopDrive extends Command {
@@ -31,7 +28,9 @@ public class TeleopDrive extends Command {
   private final CoralIntake m_coral;
   private final Elevator m_elevator;
   private final Vision m_vision;
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(); // update to 2025
+
+  // AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(); // update to 2025
+  
 
   double prev_omega = 0;
   double prev_xVel = 0;
@@ -62,6 +61,10 @@ public class TeleopDrive extends Command {
   @Override
   public void execute() {
     //
+    // Vision
+    //
+
+    //
     // Swerve Drive
     //
     double xVel = (-RobotContainer.getDriverRightJoyY() * 0.90) + (prev_xVel * 0.10); // originally .9 and .1
@@ -74,11 +77,13 @@ public class TeleopDrive extends Command {
     
     m_driveBase.setDriveSpeed(RobotContainer.getSaturatedSpeeds(xVel, yVel, omega));
 
+    // Odometery
+
     //
     // Algae Intake
     //
     double algaePower =  RobotContainer.getManipulatorLeftTrigger() - RobotContainer.getManipulatorRightTrigger();
-    m_algae.setAlgaePower(algaePower);
+    m_algae.setAlgaePower(algaePower * Constants.ManipulatorConstants.algaePercentage);
 
     //
     // Coral Intake
@@ -91,13 +96,13 @@ public class TeleopDrive extends Command {
       coralPower--;
     }
     // m_coral.setCoralWheelPower(coralPower);
-    m_coral.setCoralWheelPower(.5);
-    m_coral.setCoralWristPower(RobotContainer.getManipulatorLeftJoyY());
+    m_coral.setCoralWheelPower(coralPower * Constants.ManipulatorConstants.coralWheelPercent);
+    m_coral.setCoralWristPower(RobotContainer.getManipulatorLeftJoyY() * Constants.ManipulatorConstants.coralWristPercent);
 
     //
     // Elevator
     //
-    m_elevator.setElevatorPower(RobotContainer.getManipulatorRightJoyY());
+    m_elevator.setElevatorPower(-RobotContainer.getManipulatorRightJoyY()); // - is up, + is down
 
   }
 

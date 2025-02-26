@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -203,7 +204,7 @@ public class Module {
 
     // aConfig.inverted(Constants.Swerve.invertAngleMotor);
     aConfig.idleMode(Constants.Swerve.angleNeutralMode);
-    aConfig.smartCurrentLimit(25);
+    aConfig.smartCurrentLimit(Constants.MotorConstants.kNeoCL);
 
     // aConfig.closedLoop.positionWrappingEnabled(true);
     // aConfig.closedLoop.positionWrappingInputRange(0, 360);
@@ -214,14 +215,14 @@ public class Module {
 
     // aConfig.encoder.positionConversionFactor(Constants.Swerve.angleConversionFactor);
 
-    angleMotor.configure(aConfig, ResetMode.kResetSafeParameters, null);
+    angleMotor.configure(aConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   private void configDriveMotor() {
     SparkFlexConfig dConfig = new SparkFlexConfig();
 
     dConfig.idleMode(Constants.Swerve.driveNeutralMode);
-    dConfig.smartCurrentLimit(50);
+    dConfig.smartCurrentLimit(Constants.MotorConstants.kVortexCL);
     
     // dConfig.closedLoop.pid(Constants.Swerve.driveKP, Constants.Swerve.driveKI, Constants.Swerve.driveKD);
     // dConfig.closedLoop.velocityFF(Constants.Swerve.driveKF);
@@ -230,7 +231,7 @@ public class Module {
     // dConfig.encoder.positionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
     // dConfig.encoder.velocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
 
-    driveMotor.configure(dConfig, ResetMode.kResetSafeParameters, null);
+    driveMotor.configure(dConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public static class ModuleState {

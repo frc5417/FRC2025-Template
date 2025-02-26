@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -38,15 +38,15 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setElevatorPower(double power) {
-        elevatorParent.setVoltage(feedforward.calculate(.25 * power));
+        elevatorParent.setVoltage(feedforward.calculate(.5 * power));
         elevatorParent.set(power);
-        
+        // elevatorChild.setVoltage(feedforward.calculate(.5 * -power));
+        // elevatorChild.set(power);
     }
     
     @Override
     public void periodic() {
       // This method will be called once per scheduler run
-      //super.periodic();
       SmartDashboard.putNumber("Elevator Parent (54) Encoder", elevatorParentEncoder.getPosition());
       SmartDashboard.putNumber("Elevator Child (55) Encoder", elevatorChildEncoder.getPosition());
     }
@@ -59,13 +59,11 @@ public class Elevator extends SubsystemBase {
         SparkFlexConfig childConfig = new SparkFlexConfig();
 
         parentConfig.idleMode(IdleMode.kBrake);
-        parentConfig.smartCurrentLimit(50);
-        // parentConfig.
+        parentConfig.smartCurrentLimit(Constants.MotorConstants.kVortexCL);
+        elevatorParent.configure(parentConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         
-        elevatorParent.configure(parentConfig, ResetMode.kResetSafeParameters, null);
-        // childConfig.apply(parentConfig);
-        // childConfig.inverted(Constants.Elevator.elevatorChildInversion);
-        childConfig.idleMode(IdleMode.kCoast);
-        elevatorChild.configure(childConfig, ResetMode.kResetSafeParameters, null);
+        childConfig.apply(parentConfig);
+        childConfig.follow(elevatorParent, Constants.Elevator.elevatorChildInvert);
+        elevatorChild.configure(childConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 }

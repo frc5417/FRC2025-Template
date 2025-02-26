@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -48,10 +49,10 @@ public class CoralIntake extends SubsystemBase {
     wristConfig.idleMode(IdleMode.kBrake);
     wheelConfig.idleMode(IdleMode.kBrake);
 
-    wristConfig.smartCurrentLimit(50);
-    wheelConfig.smartCurrentLimit(25);
+    wristConfig.smartCurrentLimit(Constants.MotorConstants.kNeoCL);
+    wheelConfig.smartCurrentLimit(Constants.MotorConstants.kNeo550CL);
 
-    coralWrist.configure(wristConfig, ResetMode.kResetSafeParameters, null);
-    coralWheel.configure(wheelConfig, ResetMode.kResetSafeParameters, null);
+    coralWrist.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    coralWheel.configure(wheelConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 }

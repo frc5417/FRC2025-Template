@@ -7,20 +7,21 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AlgaeIntake extends SubsystemBase {
   /** Creates a new AlgaeIntake. */
     private final SparkMax algaeParent;
     private final SparkMax algaeChild;
-    //private final SparkMaxConfig algae1Config;
-    private DigitalInput algaeIntakeSwitch = new DigitalInput(Constants.ManipulatorConstants.algaeLimitValue);
+    private final DigitalInput algaeIntakeSwitch = new DigitalInput(Constants.ManipulatorConstants.algaeLimitValue);
 
   public AlgaeIntake() {
     algaeParent = new SparkMax(Constants.ManipulatorConstants.algaeParentId, MotorType.kBrushless);
@@ -33,34 +34,36 @@ public class AlgaeIntake extends SubsystemBase {
     // negative power intakes
     if (getAlgaeSwitch() && power < 0) {
       algaeParent.set(0);
-      algaeChild.set(0);
+      // algaeChild.set(0);
     }
     else {
       algaeParent.set(power);
-      algaeChild.set(-power);
+      // algaeChild.set(power);
     }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Algae Switch", getAlgaeSwitch());
   }
 
   private void configMotors() {
     SparkMaxConfig parentConfig = new SparkMaxConfig();
+    SparkMaxConfig childConfig = new SparkMaxConfig();
 
     parentConfig.idleMode(IdleMode.kBrake);
-    parentConfig.smartCurrentLimit(25);
-    algaeParent.configure(parentConfig, ResetMode.kResetSafeParameters, null);
-    algaeChild.configure(parentConfig, ResetMode.kResetSafeParameters, null);
+    parentConfig.smartCurrentLimit(Constants.MotorConstants.kNeo550CL);
+    algaeParent.configure(parentConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    // childConfig.apply(parentConfig);
-    // childConfig.inverted(true);
-    // algaeChild.configure(childConfig, ResetMode.kResetSafeParameters, null);
+    childConfig.apply(parentConfig);
+    childConfig.follow(algaeParent, Constants.ManipulatorConstants.algaeChildInversion);
+    // childConfig.inverted(Constants.ManipulatorConstants.algaeChildInversion);
+    algaeChild.configure(childConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public boolean getAlgaeSwitch() {
-    // return algaeIntakeSwitch.get();
-    return false;
+    return !algaeIntakeSwitch.get();
+    // return false;
   }
 }

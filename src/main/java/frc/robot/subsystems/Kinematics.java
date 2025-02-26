@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.lib.MathLib;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,8 +18,6 @@ public class Kinematics {
   public boolean fieldCentric;
   private double gyro = 0.0;
   private final Pigeon2 m_pigeon;
-
-  private final String PIGEON_YAW = "Yaw:";
 
   public Kinematics(Pigeon2 pigeon) {
     this.fieldCentric = Constants.OperatorConstants.fieldCentric;
@@ -116,6 +115,22 @@ public class Kinematics {
   }
 
   /**
+   * Normalizes the angle between 0 and 2 PI.
+   * @param angle the angle which needs to be normalized.
+   * @return
+   */
+  public double normalizeRadian(double angle) {
+    while (angle > 2 * Math.PI) {
+      angle -= 2 * Math.PI;  
+    }
+    while (angle < 0) {
+      angle += 2 * Math.PI;
+    }
+
+    return angle;
+  }
+
+  /**
    * Method which runs all the computations for kinematics.
    * <h3>Order of Operations:</h3>
    * <ol>
@@ -142,7 +157,7 @@ public class Kinematics {
       this.gyro = 0;
     }
     // Pigeon Yaw is recorded to the driver station dashboard
-    SmartDashboard.putNumber(PIGEON_YAW, this.m_pigeon.getRotation2d().getDegrees());
+    SmartDashboard.putNumber("Yaw", MathLib.normalizeDegrees(this.m_pigeon.getRotation2d().getDegrees()));
 
     conv(computeUnicorn(computeStrafe(targetXVelRatio, targetYVelRatio), computeRotation(targetAngVelRatio)));
 
@@ -157,10 +172,6 @@ public class Kinematics {
       name = Constants.ModuleConstants.ModulePosition[i] + " Speed";
       SmartDashboard.putNumber(name, vel[i]);
     }
-
-    // ChassisSpeeds telemetery = ChassisSpeeds.fromFieldRelativeSpeeds(targetXVelRatio, 
-    //         targetYVelRatio, targetAngVelRatio, this.m_pigeon.getRotation2d());
-    // SmartDashboard.putData("Swerve", );
 
     return targetModuleStates;
   }

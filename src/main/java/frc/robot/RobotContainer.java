@@ -20,10 +20,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutonLoader;
 import frc.robot.commands.TeleopDrive;
-import frc.robot.commands.RunAlgae;
-import frc.robot.commands.RunCoralWrist;
-import frc.robot.commands.RunCoralWheel;
-import frc.robot.commands.RunElevator;
 import frc.robot.subsystems.*;
 
 
