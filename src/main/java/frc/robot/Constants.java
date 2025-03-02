@@ -23,52 +23,39 @@ import edu.wpi.first.math.geometry.Translation3d;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static class FieldConstants {
+      public static final double length = Units.feetToMeters(54);
+      public static final double width = Units.feetToMeters(27);
+      public static final double speakerHeightOptimal = 2.0;
+      
+      public static final double speakerExtensionOptimal = 0.15;
+      public static final double pivotHeight = 0.381; //FIX THIS BUFFOON
+  
+      public static final Pose2d blueCenterNotePose = new Pose2d(3.5, 5.5, new Rotation2d());
+      public static final Pose2d redCenterNotePose = new Pose2d(14.5, 5.5, Rotation2d.fromDegrees(-180));
+    } 
+
   public static class OperatorConstants {
     public static final int kDriverPort = 0;
     public static final int kManipulatorPort = 1;
-    public static final boolean fieldCentric = true; //FRONT IS THE SIDE OPPOSITE TO BATTERY
-    public static final double joystickDeadband = 0.1; //HAS TO BE TUNED A BIT
-  }
-
-  public static class ModuleConstants {
-    // 0 indexing
-    public static final Integer[] driveMotorIDS = {11, 21, 31, 41}; 
-    public static final Integer[] angleMotorIDS = {12, 22, 32, 42};
-    public static final Integer[] CANCoderID = {13, 23, 33, 43};
-    public static final Double[] motorDegrees = {167.1678, 127.52928, 39.55068, 315.96696};
-    public static final Double degTolerance = 0.75;
-    public static final boolean[] invertedMotors = {true, true, false, false};
-
-  }
-
-  public static class ManipulatorConstants {
-    public static final int elevatorMaster = 61;
-    public static final int elevatorSlave = 62;
-    public static final int intake = 51;
-    public static final int shooterMaster = 52;
-    public static final int shooterSlave = 53;
-    public static final int shooterIntake = 54;
-    public static final int wrist = 55;
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double wristTolerance = 0.02;
-    public static final double shooterNominalAngle = 67;
-    public static final double intakeCurrentLimit = 7;
-  }
-
-  public static class Wrist {
-    public static final double flatWristPos = 0.18069375;
-    public static final double shoot_from_subwoofer = 0.04958;
-    public static final double handoff = 0.0421;
-    public static final double amp = 0.02;
-    public static final double passing = 0.049;
+    public static final boolean fieldCentric = true; // front is the side with the battery
+    public static final double joystickDeadband = 0.1; // HAS TO BE TUNED A BIT
   }
   
+  public static class DriveBaseConstants {
+    public static final double driveBaseRadius = (Double) 0.33 * Math.sqrt(2); 
+  }
+
+  public static class MotorConstants {
+    public static final int kNeo550CL = 20; // current limit for neo 550s
+    public static final int kNeoCL = 50; // current limit for Neos
+    public static final int kVortexCL = 60; // current limit for Vortexes
+  }
+
   public static class Swerve {
-    public static final Double angularPercentage = -0.7;
-    public static final Double XPercentage = -1.0;
-    public static final Double YPercentage = -1.0;
+    public static final Double angularPercentage = 0.7;
+    public static final Double XPercentage = 1.0;
+    public static final Double YPercentage = 1.0;
 
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;
     public static final IdleMode driveNeutralMode = IdleMode.kCoast;
@@ -76,15 +63,56 @@ public final class Constants {
     public static final double maxAngularVelocity = 10; //rad/sec
     public static final double maxModuleSpeed = 0.3;
     public static final boolean blueFlipState = false;
+
+    public static final double angleKP = 0.055;
+    public static final double angleKI = 0.0;
+    public static final double angleKD = 0.0013;
+    public static final double angleKF = 0;
+    public static final double voltageComp = 12;
   }
 
-  public static class DriveBaseConstants {
-    public static final double driveBaseRadius = (Double) 0.51 * Math.sqrt(2); 
+  public static class ModuleConstants {
+    // 0 indexing
+    public static final Integer[] driveMotorIDS = {11, 21, 31, 41}; 
+    public static final Integer[] angleMotorIDS = {12, 22, 32, 42};
+    public static final Integer[] CANCoderID = {13, 23, 33, 43};
+    public static final String[] ModulePosition = {"Front Left", "Front Right", "Back Left", "Back Right"};
+    // public static final Double[] motorDegrees = {93.69144, 88.68168, 93.16404, 85.69332};
+    public static final Double[] motorDegrees = {0.0, 0.0, 0.0, 0.0};
+    public static final Double degTolerance = 0.75;
+    public static final boolean[] invertedMotors = {false, false, false, false};
+
   }
 
-  public static class SampleConstants {
-    public static final int sampleNeo = 15;
-    public static final int sampleFlex = 59;
+  public static class ManipulatorConstants {
+    // Algae Motors
+    public static final int algaeParentId = 50;
+    public static final int algaeChildId = 51;
+    public static final int algaeLimitValue = 0;
+    public static final double algaePercentage = .7;
+    public static final boolean algaeChildInversion = true;
+
+    // Coral Motors
+    public static final int coralWrist = 52;
+    public static final int coralWheel = 53;
+    public static final double coralWheelPercent = 0.5;
+    public static final double coralWristPercent = 0.4;
+  }
+
+  public static class Elevator {
+    public static final double elevatorMin = 0;
+    public static final double elevatorMax = 0;
+    public static final int elevatorParentId = 54;
+    public static final int elevatorChildId = 55;
+    public static final boolean elevatorChildInvert = true;
+
+    public static final double feedKS = 0.55;
+    public static final double feedKV = 0.13;
+    public static final double feedKA = 0;
+  }
+
+  public static class Climb {
+    public static final int climbMotorId = 56;
   }
 
   public static class Auton {
@@ -127,16 +155,4 @@ public final class Constants {
     public static final double TARGET_HEIGHT_METERS = 1.5;
     public static final double CAMERA_PITCH_RADIANS = 0;
   }
-
-  public static class FieldConstants {
-    public static final double length = Units.feetToMeters(54);
-    public static final double width = Units.feetToMeters(27);
-    public static final double speakerHeightOptimal = 2.0;
-    
-    public static final double speakerExtensionOptimal = 0.15;
-    public static final double pivotHeight = 0.381; //FIX THIS BUFFOON
-
-    public static final Pose2d blueCenterNotePose = new Pose2d(3.5, 5.5, new Rotation2d());
-    public static final Pose2d redCenterNotePose = new Pose2d(14.5, 5.5, Rotation2d.fromDegrees(-180));
-  } 
 }

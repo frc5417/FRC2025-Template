@@ -11,18 +11,19 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutonLoader;
 import frc.robot.commands.TeleopDrive;
-import frc.robot.subsystems.Bezier;
-import frc.robot.subsystems.DriveBase;
-import frc.robot.subsystems.Kinematics;
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.*;
 
 
 /**
@@ -34,16 +35,16 @@ import frc.robot.subsystems.Vision;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-
   public static Pigeon2 pigeon = new Pigeon2(59, "canivore");
-
+  public static Bezier bezier = new Bezier();
+  // public static AlgaeIntake algaeIntake = new AlgaeIntake();
+  // public static CoralIntake coralIntake = new CoralIntake();
   public static Kinematics kinematics = new Kinematics(pigeon);
   public static DriveBase driveBase = new DriveBase(kinematics, pigeon);
   // public static Elevator elevator = new Elevator();
-  public static Bezier bezier = new Bezier();
 
   public static final Vision vision = new Vision();
-
+  
   public static AutonLoader autonLoader = new AutonLoader(driveBase, vision); //NEEDED SUBSYSTEMS FOR AUTON, ELEVATOR NOT USED
   public static TeleopDrive teleopDrive = new TeleopDrive(driveBase, vision); //ALL SUBSYSTEMS
 
@@ -58,6 +59,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    // Zeroes the yaw rotation.
+    pigeon.reset();
+    // pigeon.setYaw(90); 
   }
 
   public static void defineNamedCommands() {
@@ -89,6 +94,12 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+
+    // m_manipulatorController.rightTrigger().whileTrue(new RunAlgae(algaeIntake, 0.5)); // Intake Algae
+    // m_manipulatorController.leftTrigger().whileTrue(new RunAlgae(algaeIntake, -0.5)); // Outtake Algael
+    // m_manipulatorController.leftBumper().whileTrue(new RunCoralWheel(coralIntake, 0.5)); // Intake Coral
+    // m_manipulatorController.rightBumper().whileTrue(new RunCoralWheel(coralIntake, -0.5)); // Outtake Coral
+
   }
 
   public static void setDriverRumble(double rumbleVal) {
@@ -211,21 +222,22 @@ public class RobotContainer {
     }
   }
 
-  // public static double getManipulatorRightTrigger() {
-  //   if (Math.abs(m_manipulatorController.getRightTriggerAxis()) > Constants.OperatorConstants.joystickDeadband) {
-  //     return m_manipulatorController.getRightTriggerAxis();
-  //   } else {
-  //     return 0;
-  //   }
-  // }
+  public static double getManipulatorRightTrigger() {
+    if (Math.abs(m_manipulatorController.getRightTriggerAxis()) > Constants.OperatorConstants.joystickDeadband) {
+      return m_manipulatorController.getRightTriggerAxis();
+    } else {
+      return 0;
+    }
+  }
 
-  // public static double getManipulatorLeftTrigger() {
-  //   if (Math.abs(m_manipulatorController.getLeftTriggerAxis()) > Constants.OperatorConstants.joystickDeadband) {
-  //     return m_manipulatorController.getLeftTriggerAxis();
-  //   } else {
-  //     return 0;
-  //   }
-  // }
+  public static double getManipulatorLeftTrigger() {
+    if (Math.abs(m_manipulatorController.getLeftTriggerAxis()) > Constants.OperatorConstants.joystickDeadband) {
+      SmartDashboard.putNumber("Left Trigger", m_manipulatorController.getLeftTriggerAxis());
+      return m_manipulatorController.getLeftTriggerAxis();
+    } else {
+      return 0;
+    }
+  }
 
     public static double getElevatorLeftJoystick() {
       if (Math.abs(m_manipulatorController.getLeftY()) > Constants.OperatorConstants.joystickDeadband) {
@@ -317,7 +329,16 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autonLoader.getAuton();
+    // return autonLoader.getAuton();
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+            driveBase.setDriveSpeed(RobotContainer.getSaturatedSpeeds(-.1, 0, 0));
+          }),
+        new WaitCommand(5),
+        new InstantCommand(() -> {
+          driveBase.setDriveSpeed(RobotContainer.getSaturatedSpeeds(0, 0, 0));
+        })
+      );
   }
 
   public void runTeleopCommand() {
@@ -325,11 +346,13 @@ public class RobotContainer {
   }
 
   public static double findClockTime(double seconds) {
-    double clocktime = (seconds/0.02);
+    double clocktime = (seconds / 0.02);
     return clocktime;
   }
 
   public static ChassisSpeeds getSaturatedSpeeds(double xVel, double yVel, double omega) {
-    return new ChassisSpeeds(xVel*Constants.Swerve.XPercentage, yVel*Constants.Swerve.YPercentage, omega*Constants.Swerve.angularPercentage);
+    return new ChassisSpeeds(xVel * Constants.Swerve.XPercentage, 
+        yVel * Constants.Swerve.YPercentage, 
+        omega * Constants.Swerve.angularPercentage);
   }
 }

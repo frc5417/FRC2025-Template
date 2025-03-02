@@ -3,7 +3,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
-import edu.wpi.first.math.controller.PIDController;
+// import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,9 +13,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 public class DriveBase extends SubsystemBase {
 
@@ -33,13 +33,13 @@ public class DriveBase extends SubsystemBase {
 
     Field2d field = new Field2d();
 
-
     double mod1Prev = 0;
     double mod1Curr = 0;
     int counter = 0;
 
     double tic, toc = 0;
 
+    // might need to change this
     Translation2d m_frontLeftLocation = new Translation2d(-0.23495, 0.23495);
     Translation2d m_frontRightLocation = new Translation2d(0.23495, 0.23495);
     Translation2d m_backLeftLocation = new Translation2d(-0.23495, -0.23495);
@@ -176,14 +176,22 @@ public class DriveBase extends SubsystemBase {
             odomAngles[i] = smallestAngle(moduleGroup[i].getAngleInRadians());
         }
 
+        // m_sdkOdom.update(m_pigeon.getRotation2d(), new SwerveModulePosition[] {
+        //     new SwerveModulePosition(Math.abs(odomDeltas[2]), new Rotation2d(odomAngles[2])),
+        //     new SwerveModulePosition(Math.abs(odomDeltas[0]), new Rotation2d(odomAngles[0])),
+        //     new SwerveModulePosition(Math.abs(odomDeltas[3]), new Rotation2d(odomAngles[3])),
+        //     new SwerveModulePosition(Math.abs(odomDeltas[1]), new Rotation2d(odomAngles[1]))
+        // });
+
         m_sdkOdom.update(m_pigeon.getRotation2d(), new SwerveModulePosition[] {
-            new SwerveModulePosition(Math.abs(odomDeltas[2]), new Rotation2d(odomAngles[2])),
-            new SwerveModulePosition(Math.abs(odomDeltas[0]), new Rotation2d(odomAngles[0])),
-            new SwerveModulePosition(Math.abs(odomDeltas[3]), new Rotation2d(odomAngles[3])),
-            new SwerveModulePosition(Math.abs(odomDeltas[1]), new Rotation2d(odomAngles[1]))
-        });
+                new SwerveModulePosition(Math.abs(odomDeltas[2]), new Rotation2d(odomAngles[2])),
+                new SwerveModulePosition(Math.abs(odomDeltas[0]), new Rotation2d(odomAngles[0])),
+                new SwerveModulePosition(Math.abs(odomDeltas[3]), new Rotation2d(odomAngles[3])),
+                new SwerveModulePosition(Math.abs(odomDeltas[1]), new Rotation2d(odomAngles[1]))
+            });
         
         field.setRobotPose(getCurrentPose());
+        SmartDashboard.putData("Field", field);
     }
 
 }

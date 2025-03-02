@@ -6,10 +6,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -20,12 +22,13 @@ public class Module {
   /** Creates a new Module. */
 
   public SparkMax angleMotor;
-  public SparkMax driveMotor;
+  public SparkFlex driveMotor;
 
   public final RelativeEncoder integratedDriveEncoder;
   private final RelativeEncoder integratedAngleEncoder;
 
   private final int moduleNum; // ZERO INDEXED
+  private final String modulePos;
 
   private static final double kP = 0.50; //0.4
   private static final double kI = 0.0;
@@ -40,19 +43,18 @@ public class Module {
 
   int cnt = 0;
 
-  public Module(int module, boolean inverted) {
-    
+  public Module(int module, boolean invertedDrive) {
     this.moduleNum = module;
 
      /* Angle Motor Config */
-     angleMotor = new SparkMax(Constants.ModuleConstants.angleMotorIDS[this.moduleNum], MotorType.kBrushless);
+    angleMotor = new SparkMax(Constants.ModuleConstants.angleMotorIDS[this.moduleNum], MotorType.kBrushless);
     //  angleMotor.setIdleMode(IdleMode.kBrake);
-     configAngleMotor();
+    configAngleMotor();
 
-     integratedAngleEncoder = angleMotor.getEncoder();
-     angleMotor.getClosedLoopController();
+    integratedAngleEncoder = angleMotor.getEncoder();
+    angleMotor.getClosedLoopController();
 
-     _CANCoder = new CANcoder(Constants.ModuleConstants.CANCoderID[this.moduleNum], "canivore");
+    _CANCoder = new CANcoder(Constants.ModuleConstants.CANCoderID[this.moduleNum], "canivore");
     //  configurator = _CANCoder.getConfigurator();
 
     //  _CANCoder.setPositionToAbsolute(0);
@@ -60,18 +62,21 @@ public class Module {
     //  _CANCoder.setPosition(0);
     
      /* Drive Motor Config */
-     driveMotor = new SparkMax(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
-     configDriveMotor();
+    //  driveMotor = new SparkMax(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
+    driveMotor = new SparkFlex(Constants.ModuleConstants.driveMotorIDS[this.moduleNum], MotorType.kBrushless);
+    configDriveMotor();
 
-     integratedDriveEncoder = driveMotor.getEncoder();
-     driveMotor.getClosedLoopController();
-     integratedDriveEncoder.setPosition(0);
+    integratedDriveEncoder = driveMotor.getEncoder();
+    driveMotor.getClosedLoopController();
+    integratedDriveEncoder.setPosition(0);
      
+    modulePos = Constants.ModuleConstants.ModulePosition[this.moduleNum];
 
     pid.enableContinuousInput(0, Math.PI * 2);
     pid.setTolerance(0.0);
 
-    this.invertDriveSpeed = inverted;
+    this.invertDriveSpeed = invertedDrive;
+
     // if(_CANCoder.getMagnetFieldStrength() != MagnetFieldStrength.Good_GreenLED) {
       // throw new RuntimeException("CANCoder on Module #" + Integer.valueOf(this.moduleNum).toString() + " is not green!");
     // }
@@ -86,7 +91,11 @@ public class Module {
     // }
   }
 
-  //angle to normalize between 0 and 2PI RAD
+  /**
+   * Normalizes the angle to between 0 and 2pi radians.
+   * @param angle
+   * @return
+   */
   public double normalizeAngle(double angle) {
     double fixedAngle = angle;
     while (fixedAngle > (2*Math.PI)) { 
@@ -96,6 +105,17 @@ public class Module {
       fixedAngle += (2*Math.PI); 
     }
     return fixedAngle;
+  }
+
+  public double normalizeAngleWPI(double angle) {
+    double normalizedAngle = angle;
+    while (normalizedAngle > Math.PI) {
+      normalizedAngle -= 2 * Math.PI;
+    }
+    while (normalizedAngle <= -Math.PI) {
+      normalizedAngle += 2 * Math.PI;
+    }
+    return normalizedAngle;
   }
 
   public double setDriveSpeed(double speed) {
@@ -110,6 +130,11 @@ public class Module {
     return x;
   }
 
+  /**
+   * Gets the current absolute position of the CANCoder, subtracts it from the 
+   * starting motor degrees, and then converts into radians. 
+   * @return
+   */
   public double getAngleInRadians() { 
     return (_CANCoder.getAbsolutePosition().getValueAsDouble() * 360.0 - Constants.ModuleConstants.motorDegrees[this.moduleNum]) * (Math.PI/180.0);
   }
@@ -124,6 +149,10 @@ public class Module {
 
   public double getAngularVelocity() {
     return integratedAngleEncoder.getVelocity();
+  }
+
+  public String getModulePos() {
+    return modulePos;
   }
 
   // private void invertDrive() {
@@ -175,7 +204,7 @@ public class Module {
 
     // aConfig.inverted(Constants.Swerve.invertAngleMotor);
     aConfig.idleMode(Constants.Swerve.angleNeutralMode);
-    aConfig.smartCurrentLimit(25);
+    aConfig.smartCurrentLimit(Constants.MotorConstants.kNeoCL);
 
     // aConfig.closedLoop.positionWrappingEnabled(true);
     // aConfig.closedLoop.positionWrappingInputRange(0, 360);
@@ -186,14 +215,14 @@ public class Module {
 
     // aConfig.encoder.positionConversionFactor(Constants.Swerve.angleConversionFactor);
 
-    angleMotor.configure(aConfig, ResetMode.kResetSafeParameters, null);
+    angleMotor.configure(aConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   private void configDriveMotor() {
-    SparkMaxConfig dConfig = new SparkMaxConfig();
+    SparkFlexConfig dConfig = new SparkFlexConfig();
 
     dConfig.idleMode(Constants.Swerve.driveNeutralMode);
-    dConfig.smartCurrentLimit(50);
+    dConfig.smartCurrentLimit(Constants.MotorConstants.kVortexCL);
     
     // dConfig.closedLoop.pid(Constants.Swerve.driveKP, Constants.Swerve.driveKI, Constants.Swerve.driveKD);
     // dConfig.closedLoop.velocityFF(Constants.Swerve.driveKF);
@@ -202,7 +231,7 @@ public class Module {
     // dConfig.encoder.positionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
     // dConfig.encoder.velocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
 
-    driveMotor.configure(dConfig, ResetMode.kResetSafeParameters, null);
+    driveMotor.configure(dConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public static class ModuleState {
